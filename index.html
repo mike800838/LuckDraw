@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>Heroes · Bootstrap v5.1</title>
+
+    <!-- Bootstrap core CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+
+  </head>
+  <body>
+    
+
+<div class="container border w-100" style="background-image:url(svg/background.svg);">
+  <input type="text" class="form-control" placeholder="請輸入工號" id="input_EmployeeNumber">
+</div>
+
+
+<script src="js/jquery-3.7.1.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+      
+  </body>
+</html>
+<script>
+	$("#input_EmployeeNumber").keydown(function(event){
+	
+	if (event.keyCode == 13) {
+        window.location.assign("ShowWinner.html?EN="+$("#input_EmployeeNumber").val());
+    }
+
+	});
+</script>
