@@ -52,7 +52,28 @@
 
 </html>
 <script>
+/*
+function setCookie(cname,cvalue,exdays)
+{
+  console.log("setCookie("+cname+","+cvalue+","+exdays+")")
+  var d = new Date();
+  d.setTime(d.getTime()+(exdays*24*60*60*1000));
+  var expires = "expires="+d.toGMTString();
+  document.cookie = cname + "=" + cvalue + "; " + expires;
+}
 
+function getCookie(cname)
+{
+  var name = cname + "=";
+  var ca = document.cookie.split(';');
+  for(var i=0; i<ca.length; i++) 
+  {
+    var c = ca[i].trim();
+    if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+  }
+  return "";
+}
+*/
 $("#area_inputs").on("change", "input", function(){
 	var FocusID = this.id;
 	var FocusID_Num = FocusID.split("_");
@@ -62,24 +83,53 @@ $("#area_inputs").on("change", "input", function(){
 });
 
 $("#buttom_open").click(function(){	
+
 	if(CheckInput()){
+		var GiftID = $("#select_Gift").find(":selected").val();
 		var sParamsString = "";
-		for(var i=0;i<GiftData[$("#select_Gift").find(":selected").val()][2];i++){
-			sParamsString += $("#input_EmployeeNumber_" + i).val() + ";";
+		for(var i=0;i<GiftData[GiftID][2];i++){
+			sParamsString += $("#input_EmployeeNumber_" + i).val() + "/";
 		}
-		
+		//setCookie("winners" + GiftID, sParamsString, 1);
 		window.location.assign("ShowWinner.html?Winners="+ sParamsString + "&Gift=" + $("#select_Gift").find(":selected").val());
 	}else{
-		alert("尚有空額");
+		alert("輸入工號異常");
 	}
 });
 
+
 function CheckInput(){
 	var isFull = true;
-	for(var i=0;i<GiftData[$("#select_Gift").find(":selected").val()][2];i++){
-		var input_val = $("#input_EmployeeNumber_" + i).val();
-		if(input_val=="" || input_val==null || input_val== undefined ){isFull = false; break;}
+	var GiftID = $("#select_Gift").find(":selected").val();
+	for(var i=0;i<GiftData[GiftID][2];i++){
+		$("#input_EmployeeNumber_" + i).removeClass("is-invalid");
 	}
+	for(var i=0;i<GiftData[GiftID][2];i++){		
+		var input_val = $("#input_EmployeeNumber_" + i).val();
+		if(input_val=="" || input_val==null || input_val== undefined ){
+			$("#input_EmployeeNumber_" + i).addClass("is-invalid");
+			isFull = false;
+			console.log("空白");
+			continue;
+		}
+		if(StaffData[input_val]==undefined){
+			$("#input_EmployeeNumber_" + i).addClass("is-invalid");
+			isFull = false;
+			console.log("工號錯誤");
+			continue;
+		}
+		
+		for(var j=i+1;j<GiftData[GiftID][2];j++){
+			if($("#input_EmployeeNumber_" + i).val() == $("#input_EmployeeNumber_" + j).val()){
+				$("#input_EmployeeNumber_" + i).addClass("is-invalid");
+				$("#input_EmployeeNumber_" + j).addClass("is-invalid");
+				isFull = false;	
+				console.log("重複");										
+			}
+		}
+	}
+	
+	
 	return isFull;
 }
 
@@ -94,8 +144,20 @@ function DrawGiftSelect(){
 }
 
 function DrawGift(){
-	$("#label_Gift").text(GiftData[$("#select_Gift").find(":selected").val()][0]);
-	$("#label_Gift_Content").text(GiftData[$("#select_Gift").find(":selected").val()][1] + "  " + GiftData[$("#select_Gift").find(":selected").val()][2] + "名");
+	var GiftID = $("#select_Gift").find(":selected").val();
+	$("#label_Gift").text(GiftData[GiftID][0]);
+	$("#label_Gift_Content").text(GiftData[GiftID][1] + "  " + GiftData[GiftID][2] + "名");
+
+	 /*
+	var Giftcookie = getCookie("winners" +GiftID);
+	console.log("Giftcookie(winners" +GiftID+") = " + Giftcookie);
+	if(Giftcookie!=undefined && Giftcookie!= "" &&Giftcookie!=null){
+		var Winners = Giftcookie.split("/");
+		for(var i=0;i<Winners.length;i++){
+			$("#input_EmployeeNumber_" + i).text(Winners[i]);
+		}
+	}
+	*/
 }
 
 function DrawInput(){

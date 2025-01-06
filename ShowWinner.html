@@ -55,7 +55,7 @@ function ShowWinner(){
 	var GiftID = getUrlParam("Gift");
 	var WinnerString = getUrlParam("Winners").toString();
 	console.log("WinnerString = " + WinnerString);
-	var Winners = WinnerString.split(";");
+	var Winners = WinnerString.split("/");
 	var sHTMLString = "";
 	sHTMLString += "<div class='h3'>恭喜中獎</div>";
 	sHTMLString += "<div class='h1'>" + GiftData[GiftID][0] + " " + GiftData[GiftID][1] + "</div>";
