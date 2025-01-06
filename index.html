@@ -1,36 +1,115 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.88.1">
-    <title>Heroes · Bootstrap v5.1</title>
+    <title>AOT 創新榮耀 不敗經典</title>
 
     <!-- Bootstrap core CSS -->
-<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/bootstrap.min.css" rel="stylesheet">
 
-  </head>
-  <body>
-    
+</head>
+ <body>
+	<div class="vw-100 vh-100" style="background-image:url(img/background.jpg); background-repeat: no-repeat; background-attachment: fixed; background-position: center;background-size: cover;">
+		<div class="row justify-content-end">
+			<div class="col-auto">
+				<select id="select_Gift">
+				</select>
+			</div>
+		</div>
 
-<div class="container border w-100" style="background-image:url(svg/background.svg);">
-  <input type="text" class="form-control" placeholder="請輸入工號" id="input_EmployeeNumber">
-</div>
-
-
+		<div class="row vh-100 justify-content-center">
+			<div class="col-auto align-self-center">
+				<div class="card">
+					<div class="row justify-content-center p-4">
+						<div class="col-auto text-center">						
+							<div class="h1" id="label_Gift"></div>
+							<div class="h1" id="label_Gift_Content"></div>
+						</div>
+					</div>
+					<div class="row justify-content-center px-4">
+						<div class="col-auto align-self-center" id="area_inputs">
+							
+						</div>
+					</div>
+					<div class="row justify-content-center p-4">
+						<div class="col-auto align-self-center">
+							<button type="button" class="btn btn-warning" id="buttom_open">開獎</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
 <script src="js/jquery-3.7.1.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>
-      
-  </body>
+<script src="js/Gift.js"></script>
+<script src="js/Staff.js"></script>
+
 </html>
 <script>
-	$("#input_EmployeeNumber").keydown(function(event){
-	
-	if (event.keyCode == 13) {
-        window.location.assign("ShowWinner.html?EN="+$("#input_EmployeeNumber").val());
-    }
+$("#buttom_open").click(function(){	
+	if(CheckInput()){
+		var sParamsString = "";
+		for(var i=0;i<GiftData[$("#select_Gift").find(":selected").val()][2];i++){
+			sParamsString += $("#input_EmployeeNumber" + i).val() + ";";
+		}
+		
+		window.location.assign("ShowWinner.html?Winners="+ sParamsString + "&Gift=" + $("#select_Gift").find(":selected").val());
+	}else{
+		alert("尚有空額");
+	}
+});
 
-	});
+function CheckInput(){
+	var isFull = true;
+	for(var i=0;i<GiftData[$("#select_Gift").find(":selected").val()][2];i++){
+		var input_val = $("#input_EmployeeNumber" + i).val();
+		if(input_val=="" || input_val==null || input_val== undefined ){isFull = false; break;}
+	}
+	return isFull;
+}
+
+function DrawGiftSelect(){
+	console.log("--DrawGiftSelect--");
+	var sHTMLString = "";
+	console.log("GiftData= " + Object.keys(GiftData).length);
+	for(var i=1;i<=Object.keys(GiftData).length;i++){
+		sHTMLString+="<option value='"+i+"'>"+GiftData[i][0]+"</option>";
+	}
+	$("#select_Gift").html(sHTMLString);
+}
+
+function DrawGift(){
+	$("#label_Gift").text(GiftData[$("#select_Gift").find(":selected").val()][0]);
+	$("#label_Gift_Content").text(GiftData[$("#select_Gift").find(":selected").val()][1] + "  " + GiftData[$("#select_Gift").find(":selected").val()][2] + "名");
+}
+
+function DrawInput(){
+	var sHTMLString = "";
+	var input_Amount = GiftData[$("#select_Gift").find(":selected").val()][2];
+	for(var i=0; i<input_Amount;i++){
+		if(i%5==0){sHTMLString += "<div class='row py-2'>";}
+		sHTMLString += "<div class='col-auto'>";
+		sHTMLString += "<input type='text' class='form-control ' placeholder='請輸入工號' id='input_EmployeeNumber"+i+"' autocomplete='off'>";
+		sHTMLString += "</div>";
+		if(i%5==4){sHTMLString += "</div>";}
+	}
+	$("#area_inputs").html(sHTMLString);
+}
+
+$("#select_Gift").change(function(){
+	DrawGift();
+	DrawInput();
+});
+	
+$( document ).ready(function() {
+	DrawGiftSelect();
+	DrawGift();
+	DrawInput();
+});
 </script>
