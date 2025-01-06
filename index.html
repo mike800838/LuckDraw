@@ -52,11 +52,20 @@
 
 </html>
 <script>
+
+$("#area_inputs").on("change", "input", function(){
+	var FocusID = this.id;
+	var FocusID_Num = FocusID.split("_");
+	var NextFocus = "#input_EmployeeNumber_" + (parseInt(FocusID_Num[2])+1);
+	//console.log(NextFocus);
+	$(NextFocus).focus();
+});
+
 $("#buttom_open").click(function(){	
 	if(CheckInput()){
 		var sParamsString = "";
 		for(var i=0;i<GiftData[$("#select_Gift").find(":selected").val()][2];i++){
-			sParamsString += $("#input_EmployeeNumber" + i).val() + ";";
+			sParamsString += $("#input_EmployeeNumber_" + i).val() + ";";
 		}
 		
 		window.location.assign("ShowWinner.html?Winners="+ sParamsString + "&Gift=" + $("#select_Gift").find(":selected").val());
@@ -68,7 +77,7 @@ $("#buttom_open").click(function(){
 function CheckInput(){
 	var isFull = true;
 	for(var i=0;i<GiftData[$("#select_Gift").find(":selected").val()][2];i++){
-		var input_val = $("#input_EmployeeNumber" + i).val();
+		var input_val = $("#input_EmployeeNumber_" + i).val();
 		if(input_val=="" || input_val==null || input_val== undefined ){isFull = false; break;}
 	}
 	return isFull;
@@ -95,7 +104,7 @@ function DrawInput(){
 	for(var i=0; i<input_Amount;i++){
 		if(i%5==0){sHTMLString += "<div class='row py-2'>";}
 		sHTMLString += "<div class='col-auto'>";
-		sHTMLString += "<input type='text' class='form-control ' placeholder='請輸入工號' id='input_EmployeeNumber"+i+"' autocomplete='off'>";
+		sHTMLString += "<input type='text' class='form-control ' placeholder='請輸入工號' id='input_EmployeeNumber_"+i+"' autocomplete='off'>";
 		sHTMLString += "</div>";
 		if(i%5==4){sHTMLString += "</div>";}
 	}
